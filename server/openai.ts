@@ -21,7 +21,7 @@ export async function generateStartupIdea(topic: string): Promise<InsertIdea> {
         "name": "A catchy startup name",
         "description": "A brief description of what the app does (max 120 characters)",
         "features": ["Feature 1", "Feature 2", "Feature 3"],
-        "city": "A suitable real city for this startup's headquarters",
+        "city": "A unique or unexpected real city for this startup's headquarters",
         "latitude": "Latitude of the city (e.g., 40.7128)",
         "longitude": "Longitude of the city (e.g., -74.0060)"
       }
@@ -29,7 +29,14 @@ export async function generateStartupIdea(topic: string): Promise<InsertIdea> {
       Be creative but concise. The name should be memorable and relate to the topic.
       The description should explain the core value proposition in 1-2 sentences.
       The features should be the 3 most important capabilities of the application.
-      Choose a real city that would be appropriate for this startup and provide its accurate coordinates.`;
+      
+      For the headquarters location:
+      - Choose a real, but unique or unexpected city that would make an interesting headquarters
+      - Avoid obvious tech hubs like San Francisco, New York, or London unless specifically relevant
+      - Consider cities in different countries and continents for global diversity
+      - If the topic suggests a specific geographic region, consider cities there
+      - For niche or specialized startups, consider cities known for that particular industry or with relevant resources
+      - Provide accurate latitude and longitude coordinates for the selected city`;
 
     const response = await openai.chat.completions.create({
       model: "gpt-4o",

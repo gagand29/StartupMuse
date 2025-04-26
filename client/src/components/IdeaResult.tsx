@@ -139,27 +139,51 @@ export default function IdeaResult({ idea, onSave }: IdeaResultProps) {
               transition={{ duration: 0.3, delay: 0.3 }}
               className="pt-2"
             >
-              <h3 className="mb-3 text-base font-medium text-muted-foreground flex items-center">
-                <i className="fas fa-map-marker-alt mr-2 text-secondary"></i>
-                Headquarters Location
-              </h3>
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="text-base font-medium text-muted-foreground flex items-center">
+                  <i className="fas fa-map-marker-alt mr-2 text-secondary"></i>
+                  Global Headquarters
+                </h3>
+                {idea.city && (
+                  <Badge 
+                    variant="outline" 
+                    className="bg-primary/10 text-primary hover:bg-primary/20 border-primary/20 flex items-center gap-1"
+                  >
+                    <i className="fas fa-globe-americas text-xs"></i>
+                    {idea.city}
+                  </Badge>
+                )}
+              </div>
               
-              {idea.city && (
-                <p className="mb-3 text-foreground font-semibold">
-                  {idea.city}
-                </p>
-              )}
-
-              <Suspense fallback={
-                <div className="rounded-lg border-2 border-border bg-muted/20 flex items-center justify-center" style={{ height: '300px' }}>
-                  <div className="text-center">
-                    <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent mx-auto mb-2"></div>
-                    <p className="text-muted-foreground">Loading map...</p>
+              <motion.div 
+                className="rounded-lg overflow-hidden border-2 border-border shadow-sm"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.2 }}
+                whileHover={{ boxShadow: "0 8px 30px rgba(0, 0, 0, 0.12)" }}
+              >
+                <Suspense fallback={
+                  <div className="bg-muted/20 flex items-center justify-center" style={{ height: '300px' }}>
+                    <div className="text-center">
+                      <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent mx-auto mb-2"></div>
+                      <p className="text-muted-foreground">Locating headquarters...</p>
+                    </div>
                   </div>
-                </div>
-              }>
-                <IdeaMap idea={idea} />
-              </Suspense>
+                }>
+                  <IdeaMap idea={idea} />
+                </Suspense>
+                
+                {(idea.latitude && idea.longitude) && (
+                  <div className="bg-muted/30 text-xs text-muted-foreground p-2 flex justify-between">
+                    <span>
+                      <i className="fas fa-map-pin mr-1"></i> {idea.city || 'Headquarters Location'}
+                    </span>
+                    <span className="font-mono">
+                      {parseFloat(idea.latitude).toFixed(4)}, {parseFloat(idea.longitude).toFixed(4)}
+                    </span>
+                  </div>
+                )}
+              </motion.div>
             </motion.div>
           )}
         </div>

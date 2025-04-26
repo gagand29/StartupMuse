@@ -30,7 +30,13 @@ export class MemStorage implements IStorage {
   // Idea storage methods
   async saveIdea(insertIdea: InsertIdea): Promise<Idea> {
     const id = this.ideaCurrentId++;
-    const idea: Idea = { ...insertIdea, id };
+    const idea: Idea = { 
+      ...insertIdea, 
+      id,
+      city: insertIdea.city ?? null,
+      latitude: insertIdea.latitude ?? null,
+      longitude: insertIdea.longitude ?? null 
+    };
     this.ideas.set(id, idea);
     return idea;
   }
@@ -50,7 +56,14 @@ export class MemStorage implements IStorage {
       return undefined;
     }
     
-    const updatedIdea: Idea = { ...updateIdea, id };
+    const updatedIdea: Idea = { 
+      ...updateIdea, 
+      id,
+      city: updateIdea.city ?? null,
+      latitude: updateIdea.latitude ?? null,
+      longitude: updateIdea.longitude ?? null
+    };
+    
     this.ideas.set(id, updatedIdea);
     return updatedIdea;
   }
