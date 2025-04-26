@@ -1,5 +1,11 @@
+import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Idea } from "@shared/schema";
+import EditIdeaDialog from "@/components/EditIdeaDialog";
 
 interface SavedIdeasProps {
   ideas: Idea[];
@@ -7,6 +13,42 @@ interface SavedIdeasProps {
 }
 
 export default function SavedIdeas({ ideas, isLoading }: SavedIdeasProps) {
+  const [editingIdea, setEditingIdea] = useState<Idea | null>(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  const { mutate: deleteIdea, isPending: isDeleting } = useMutation({
+    mutationFn: async (id: number) => {
+      await apiRequest("DELETE", `/api/ideas/${id}`);
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success",
+        description: "Idea deleted successfully!",
+      });
+      queryClient.invalidateQueries({ queryKey: ['/api/ideas'] });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error deleting idea",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleEdit = (idea: Idea) => {
+    setEditingIdea(idea);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleDelete = (id: number) => {
+    if (window.confirm("Are you sure you want to delete this idea?")) {
+      deleteIdea(id);
+    }
+  };
+
   return (
     <Card className="bg-white rounded-lg shadow">
       <CardContent className="p-6">
@@ -39,11 +81,46 @@ export default function SavedIdeas({ ideas, isLoading }: SavedIdeasProps) {
                     ))}
                   </ul>
                 </div>
+                <div className="mt-3 flex space-x-2 justify-end">
+                  <Button
+                    onClick={() => handleEdit(idea)} 
+                    variant="outline"
+                    size="sm"
+                    className="text-xs"
+                  >
+                    <i className="fas fa-edit mr-1"></i> Edit
+                  </Button>
+                  <Button 
+                    onClick={() => handleDelete(idea.id)}
+                    variant="outline"
+                    size="sm"
+                    className="text-xs bg-red-50 text-red-600 border-red-200 hover:bg-red-100 hover:text-red-700"
+                    disabled={isDeleting}
+                  >
+                    <i className="fas fa-trash-alt mr-1"></i> Delete
+                  </Button>
+                </div>
               </div>
             ))}
           </div>
         )}
       </CardContent>
+      
+      {editingIdea && (
+        <EditIdeaDialog
+          idea={editingIdea}
+          isOpen={isEditDialogOpen}
+          onClose={() => {
+            setIsEditDialogOpen(false);
+            setEditingIdea(null);
+          }}
+          onSave={() => {
+            setIsEditDialogOpen(false);
+            setEditingIdea(null);
+            queryClient.invalidateQueries({ queryKey: ['/api/ideas'] });
+          }}
+        />
+      )}
     </Card>
   );
 }

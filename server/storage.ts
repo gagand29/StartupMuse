@@ -4,6 +4,9 @@ export interface IStorage {
   // Idea storage methods
   saveIdea(idea: InsertIdea): Promise<Idea>;
   getAllIdeas(): Promise<Idea[]>;
+  getIdeaById(id: number): Promise<Idea | undefined>;
+  updateIdea(id: number, idea: InsertIdea): Promise<Idea | undefined>;
+  deleteIdea(id: number): Promise<boolean>;
   
   // User storage methods (kept for compatibility)
   getUser(id: number): Promise<User | undefined>;
@@ -34,6 +37,33 @@ export class MemStorage implements IStorage {
 
   async getAllIdeas(): Promise<Idea[]> {
     return Array.from(this.ideas.values()).sort((a, b) => b.id - a.id);
+  }
+  
+  async getIdeaById(id: number): Promise<Idea | undefined> {
+    return this.ideas.get(id);
+  }
+
+  async updateIdea(id: number, updateIdea: InsertIdea): Promise<Idea | undefined> {
+    const existingIdea = await this.getIdeaById(id);
+    
+    if (!existingIdea) {
+      return undefined;
+    }
+    
+    const updatedIdea: Idea = { ...updateIdea, id };
+    this.ideas.set(id, updatedIdea);
+    return updatedIdea;
+  }
+
+  async deleteIdea(id: number): Promise<boolean> {
+    const exists = this.ideas.has(id);
+    
+    if (exists) {
+      this.ideas.delete(id);
+      return true;
+    }
+    
+    return false;
   }
   
   // User storage methods (kept for compatibility)

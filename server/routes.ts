@@ -63,6 +63,91 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     }
   });
+  
+  // Route to get a specific idea by ID
+  app.get("/api/ideas/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid idea ID" });
+      }
+      
+      const idea = await storage.getIdeaById(id);
+      
+      if (!idea) {
+        return res.status(404).json({ message: "Idea not found" });
+      }
+      
+      return res.status(200).json(idea);
+    } catch (error) {
+      console.error("Error fetching idea:", error);
+      return res.status(500).json({ 
+        message: "Failed to fetch idea", 
+        error: error.message 
+      });
+    }
+  });
+  
+  // Route to update an idea
+  app.put("/api/ideas/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid idea ID" });
+      }
+      
+      const result = insertIdeaSchema.safeParse(req.body);
+      
+      if (!result.success) {
+        const validationError = fromZodError(result.error);
+        return res.status(400).json({ 
+          message: "Invalid idea data", 
+          error: validationError.message 
+        });
+      }
+      
+      const updatedIdea = await storage.updateIdea(id, result.data);
+      
+      if (!updatedIdea) {
+        return res.status(404).json({ message: "Idea not found" });
+      }
+      
+      return res.status(200).json(updatedIdea);
+    } catch (error) {
+      console.error("Error updating idea:", error);
+      return res.status(500).json({ 
+        message: "Failed to update idea", 
+        error: error.message 
+      });
+    }
+  });
+  
+  // Route to delete an idea
+  app.delete("/api/ideas/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid idea ID" });
+      }
+      
+      const success = await storage.deleteIdea(id);
+      
+      if (!success) {
+        return res.status(404).json({ message: "Idea not found" });
+      }
+      
+      return res.status(200).json({ message: "Idea deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting idea:", error);
+      return res.status(500).json({ 
+        message: "Failed to delete idea", 
+        error: error.message 
+      });
+    }
+  });
 
   const httpServer = createServer(app);
   return httpServer;
