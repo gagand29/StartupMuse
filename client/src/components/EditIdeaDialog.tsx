@@ -23,6 +23,9 @@ export default function EditIdeaDialog({ idea, isOpen, onClose, onSave }: EditId
     description: idea.description,
     features: [...idea.features],
     topic: idea.topic,
+    city: idea.city || null,
+    latitude: idea.latitude || null,
+    longitude: idea.longitude || null,
   });
   
   const { toast } = useToast();
@@ -181,6 +184,72 @@ export default function EditIdeaDialog({ idea, isOpen, onClose, onSave }: EditId
                   />
                 </motion.div>
               ))}
+            </motion.div>
+            
+            {/* Location information */}
+            <motion.div 
+              className="grid gap-3 mt-2 border-t border-border pt-4"
+              variants={inputVariants}
+              initial="initial"
+              animate="animate"
+              transition={{ duration: 0.2, delay: 0.4 }}
+            >
+              <div className="flex items-center gap-2">
+                <i className="fas fa-map-marker-alt text-secondary"></i>
+                <Label className="text-muted-foreground font-medium">Headquarters Location</Label>
+              </div>
+              
+              <div className="grid gap-3">
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  <Label htmlFor="city" className="text-muted-foreground text-sm mb-1 block">City</Label>
+                  <Input
+                    id="city"
+                    name="city"
+                    value={formData.city || ''}
+                    onChange={handleInputChange}
+                    placeholder="Enter city name"
+                    className="h-10 rounded-md border-border focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  />
+                </motion.div>
+                
+                <div className="grid grid-cols-2 gap-3">
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.55 }}
+                  >
+                    <Label htmlFor="latitude" className="text-muted-foreground text-sm mb-1 block">Latitude</Label>
+                    <Input
+                      id="latitude"
+                      name="latitude"
+                      value={formData.latitude || ''}
+                      onChange={handleInputChange}
+                      placeholder="Enter latitude"
+                      className="h-10 rounded-md border-border focus:border-primary focus:ring-2 focus:ring-primary/20"
+                    />
+                  </motion.div>
+                  
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6 }}
+                  >
+                    <Label htmlFor="longitude" className="text-muted-foreground text-sm mb-1 block">Longitude</Label>
+                    <Input
+                      id="longitude"
+                      name="longitude"
+                      value={formData.longitude || ''}
+                      onChange={handleInputChange}
+                      placeholder="Enter longitude"
+                      className="h-10 rounded-md border-border focus:border-primary focus:ring-2 focus:ring-primary/20"
+                    />
+                  </motion.div>
+                </div>
+              </div>
             </motion.div>
           </div>
           

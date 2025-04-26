@@ -151,6 +151,14 @@ export default function SavedIdeas({ ideas, isLoading }: SavedIdeasProps) {
                       <Badge variant="outline" className="bg-secondary/10 text-secondary hover:bg-secondary/20 border-secondary/20">{idea.topic}</Badge>
                     </div>
                     <p className="text-foreground text-sm">{idea.description}</p>
+                    
+                    {idea.city && (
+                      <div className="flex items-center text-sm text-muted-foreground gap-1 mt-1">
+                        <i className="fas fa-map-marker-alt text-secondary/70"></i>
+                        <span>{idea.city}</span>
+                      </div>
+                    )}
+                    
                     <div className="mt-1">
                       <p className="text-xs font-medium text-muted-foreground mb-2">Key Features:</p>
                       <ul className="grid gap-1">

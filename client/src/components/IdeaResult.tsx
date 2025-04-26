@@ -1,11 +1,15 @@
 import { useMutation } from "@tanstack/react-query";
 import { motion } from "framer-motion";
+import { Suspense, lazy } from "react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Idea } from "@shared/schema";
+
+// Lazy load the map component to improve initial load time
+const IdeaMap = lazy(() => import("@/components/IdeaMap"));
 
 interface IdeaResultProps {
   idea: Idea;
@@ -126,6 +130,38 @@ export default function IdeaResult({ idea, onSave }: IdeaResultProps) {
               ))}
             </motion.ul>
           </motion.div>
+
+          {/* Headquarters Location */}
+          {(idea.city || idea.latitude || idea.longitude) && (
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.3 }}
+              className="pt-2"
+            >
+              <h3 className="mb-3 text-base font-medium text-muted-foreground flex items-center">
+                <i className="fas fa-map-marker-alt mr-2 text-secondary"></i>
+                Headquarters Location
+              </h3>
+              
+              {idea.city && (
+                <p className="mb-3 text-foreground font-semibold">
+                  {idea.city}
+                </p>
+              )}
+
+              <Suspense fallback={
+                <div className="rounded-lg border-2 border-border bg-muted/20 flex items-center justify-center" style={{ height: '300px' }}>
+                  <div className="text-center">
+                    <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent mx-auto mb-2"></div>
+                    <p className="text-muted-foreground">Loading map...</p>
+                  </div>
+                </div>
+              }>
+                <IdeaMap idea={idea} />
+              </Suspense>
+            </motion.div>
+          )}
         </div>
       </CardContent>
     </Card>
