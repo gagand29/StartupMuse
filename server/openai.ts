@@ -8,6 +8,9 @@ interface StartupIdeaResponse {
   name: string;
   description: string;
   features: string[];
+  city: string;
+  latitude: string;
+  longitude: string;
 }
 
 export async function generateStartupIdea(topic: string): Promise<InsertIdea> {
@@ -17,19 +20,23 @@ export async function generateStartupIdea(topic: string): Promise<InsertIdea> {
       {
         "name": "A catchy startup name",
         "description": "A brief description of what the app does (max 120 characters)",
-        "features": ["Feature 1", "Feature 2", "Feature 3"]
+        "features": ["Feature 1", "Feature 2", "Feature 3"],
+        "city": "A suitable real city for this startup's headquarters",
+        "latitude": "Latitude of the city (e.g., 40.7128)",
+        "longitude": "Longitude of the city (e.g., -74.0060)"
       }
       
       Be creative but concise. The name should be memorable and relate to the topic.
       The description should explain the core value proposition in 1-2 sentences.
-      The features should be the 3 most important capabilities of the application.`;
+      The features should be the 3 most important capabilities of the application.
+      Choose a real city that would be appropriate for this startup and provide its accurate coordinates.`;
 
     const response = await openai.chat.completions.create({
       model: "gpt-4o",
       messages: [{ role: "user", content: prompt }],
       response_format: { type: "json_object" },
       temperature: 0.8,
-      max_tokens: 500,
+      max_tokens: 600,
     });
 
     const content = response.choices[0].message.content;
@@ -54,11 +61,19 @@ export async function generateStartupIdea(topic: string): Promise<InsertIdea> {
       }
     }
 
+    // Default to San Francisco if no location is provided
+    const city = startupIdea.city || "San Francisco";
+    const latitude = startupIdea.latitude || "37.7749";
+    const longitude = startupIdea.longitude || "-122.4194";
+
     return {
       topic,
       name: startupIdea.name,
       description: startupIdea.description,
-      features
+      features,
+      city,
+      latitude,
+      longitude
     };
   } catch (error) {
     console.error("OpenAI API error:", error);

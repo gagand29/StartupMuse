@@ -8,6 +8,9 @@ export const ideas = pgTable("ideas", {
   name: text("name").notNull(),
   description: text("description").notNull(),
   features: text("features").array().notNull(),
+  city: text("city"),
+  latitude: text("latitude"),
+  longitude: text("longitude"),
 });
 
 export const insertIdeaSchema = createInsertSchema(ideas).omit({
