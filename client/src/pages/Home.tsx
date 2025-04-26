@@ -73,7 +73,7 @@ export default function Home() {
             transition={{ delay: 0.3 }}
           >
             <span className="text-sm text-muted-foreground hidden sm:inline-block">
-              Powered by OpenAI
+              
             </span>
             <ThemeToggle />
           </motion.div>
