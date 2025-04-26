@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import IdeaForm from "@/components/IdeaForm";
 import IdeaResult from "@/components/IdeaResult";
 import SavedIdeas from "@/components/SavedIdeas";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { Idea } from "@shared/schema";
 
 export default function Home() {
@@ -66,12 +67,15 @@ export default function Home() {
             Startup Idea Generator
           </motion.h1>
           <motion.div 
-            className="text-sm text-muted-foreground"
+            className="flex items-center gap-4"
             initial={{ x: 20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.3 }}
           >
-            Powered by OpenAI
+            <span className="text-sm text-muted-foreground hidden sm:inline-block">
+              Powered by OpenAI
+            </span>
+            <ThemeToggle />
           </motion.div>
         </div>
       </motion.header>

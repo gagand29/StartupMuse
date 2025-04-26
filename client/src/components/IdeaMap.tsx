@@ -83,7 +83,8 @@ export default function IdeaMap({ idea }: IdeaMapProps) {
     : [37.7749, -122.4194]; // Default to San Francisco
   
   // Get a custom marker icon for this startup
-  const customIcon = getCustomIcon('#7c3aed'); // Using purple color
+  // Color changes based on theme
+  const customIcon = getCustomIcon('hsl(var(--primary))'); // Using primary theme color
   
   return (
     <div style={{ height: '300px' }}>
