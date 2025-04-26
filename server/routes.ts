@@ -17,11 +17,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const startupIdea = await generateStartupIdea(topic);
       return res.status(200).json(startupIdea);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error generating idea:", error);
       return res.status(500).json({ 
         message: "Failed to generate startup idea", 
-        error: error.message 
+        error: error?.message || "Unknown error" 
       });
     }
   });
@@ -41,11 +41,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const savedIdea = await storage.saveIdea(result.data);
       return res.status(200).json(savedIdea);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error saving idea:", error);
       return res.status(500).json({ 
         message: "Failed to save idea", 
-        error: error.message 
+        error: error?.message || "Unknown error" 
       });
     }
   });
@@ -55,11 +55,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const ideas = await storage.getAllIdeas();
       return res.status(200).json(ideas);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching ideas:", error);
       return res.status(500).json({ 
         message: "Failed to fetch ideas", 
-        error: error.message 
+        error: error?.message || "Unknown error" 
       });
     }
   });
@@ -80,11 +80,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       return res.status(200).json(idea);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching idea:", error);
       return res.status(500).json({ 
         message: "Failed to fetch idea", 
-        error: error.message 
+        error: error?.message || "Unknown error" 
       });
     }
   });
@@ -115,11 +115,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       return res.status(200).json(updatedIdea);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error updating idea:", error);
       return res.status(500).json({ 
         message: "Failed to update idea", 
-        error: error.message 
+        error: error?.message || "Unknown error" 
       });
     }
   });
@@ -140,11 +140,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       return res.status(200).json({ message: "Idea deleted successfully" });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error deleting idea:", error);
       return res.status(500).json({ 
         message: "Failed to delete idea", 
-        error: error.message 
+        error: error?.message || "Unknown error" 
       });
     }
   });

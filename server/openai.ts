@@ -82,8 +82,8 @@ export async function generateStartupIdea(topic: string): Promise<InsertIdea> {
       latitude,
       longitude
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error("OpenAI API error:", error);
-    throw new Error(`Failed to generate startup idea: ${error.message}`);
+    throw new Error(`Failed to generate startup idea: ${error?.message || "Unknown error"}`);
   }
 }

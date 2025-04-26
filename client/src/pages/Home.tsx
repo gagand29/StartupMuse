@@ -13,7 +13,7 @@ export default function Home() {
     data: savedIdeas, 
     isLoading: isLoadingIdeas,
     refetch: refetchIdeas 
-  } = useQuery({
+  } = useQuery<Idea[]>({
     queryKey: ['/api/ideas'],
   });
   
@@ -104,7 +104,7 @@ export default function Home() {
           
           <motion.div variants={itemVariants}>
             <SavedIdeas
-              ideas={savedIdeas || []}
+              ideas={Array.isArray(savedIdeas) ? savedIdeas : []}
               isLoading={isLoadingIdeas}
             />
           </motion.div>
