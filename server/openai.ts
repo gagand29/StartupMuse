@@ -13,8 +13,64 @@ interface StartupIdeaResponse {
   longitude: string;
 }
 
+/**
+ * Analyzes the user's topic to extract any location mentions
+ * and generates an appropriate prompt for OpenAI
+ */
+function extractLocationFromTopic(topic: string): string {
+  // Common cities, countries, and regions to check for
+  const places = [
+    // Major global cities
+    'new york', 'paris', 'london', 'tokyo', 'shanghai', 'dubai', 'singapore',
+    'los angeles', 'chicago', 'toronto', 'sydney', 'melbourne', 'berlin', 'madrid',
+    'rome', 'mumbai', 'delhi', 'bangalore', 'bangkok', 'seoul', 'hong kong',
+    
+    // Countries
+    'india', 'china', 'japan', 'france', 'germany', 'italy', 'spain',
+    'canada', 'australia', 'brazil', 'mexico', 'russia', 'uk', 'usa',
+    'united states', 'united kingdom', 
+    
+    // US states
+    'california', 'texas', 'florida', 'new york state', 'illinois',
+    'pennsylvania', 'ohio', 'georgia', 'michigan', 'north carolina',
+    
+    // Regions
+    'europe', 'asia', 'africa', 'south america', 'north america',
+    'middle east', 'southeast asia', 'latin america', 'scandinavia',
+    'caribbean', 'mediterranean', 'eastern europe', 'western europe'
+  ];
+  
+  // Convert the topic to lowercase for case-insensitive matching
+  const lowerTopic = topic.toLowerCase();
+  
+  // Check if any location names are in the topic
+  const foundPlace = places.find(place => lowerTopic.includes(place));
+  
+  if (foundPlace) {
+    console.log(`Found location in topic: ${foundPlace}`);
+    
+    return `
+      - The startup headquarters MUST be located in or near ${foundPlace.charAt(0).toUpperCase() + foundPlace.slice(1)}
+      - Choose a specific city within this region that would be appropriate for this business
+      - If the location is a city, use that exact city
+      - If the location is a country or region, choose a notable but perhaps not obvious city within it
+    `;
+  }
+  
+  // Default prompt if no location is specified
+  return `
+      - Choose a real, but unique or unexpected city that would make an interesting headquarters
+      - Avoid obvious tech hubs like San Francisco, New York, or London unless specifically relevant
+      - Consider cities in different countries and continents for global diversity
+      - If the topic suggests a specific industry, consider cities known for that particular industry
+  `;
+}
+
 export async function generateStartupIdea(topic: string): Promise<InsertIdea> {
   try {
+    // Extract any geographic locations from the topic
+    const locationBasedPrompt = extractLocationFromTopic(topic);
+    
     const prompt = `Generate a personalized startup app idea related to "${topic}".
       Please respond with a JSON object in the following format:
       {
@@ -31,11 +87,7 @@ export async function generateStartupIdea(topic: string): Promise<InsertIdea> {
       The features should be the 3 most important capabilities of the application.
       
       For the headquarters location:
-      - Choose a real, but unique or unexpected city that would make an interesting headquarters
-      - Avoid obvious tech hubs like San Francisco, New York, or London unless specifically relevant
-      - Consider cities in different countries and continents for global diversity
-      - If the topic suggests a specific geographic region, consider cities there
-      - For niche or specialized startups, consider cities known for that particular industry or with relevant resources
+      ${locationBasedPrompt}
       - Provide accurate latitude and longitude coordinates for the selected city`;
 
     const response = await openai.chat.completions.create({
