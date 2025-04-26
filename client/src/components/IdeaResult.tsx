@@ -1,8 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Idea } from "@shared/schema";
 
 interface IdeaResultProps {
@@ -33,51 +35,97 @@ export default function IdeaResult({ idea, onSave }: IdeaResultProps) {
     },
   });
 
+  // Animation variants for features list
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const item = {
+    hidden: { opacity: 0, x: -20 },
+    show: { opacity: 1, x: 0 }
+  };
+
   return (
-    <Card className="bg-white rounded-lg shadow">
-      <CardContent className="p-6">
-        <div className="flex justify-between items-start mb-4">
-          <h2 className="text-xl font-semibold">Your Startup Idea</h2>
-          <Button
-            onClick={() => saveIdea()}
-            className="bg-secondary hover:bg-green-600 text-white text-sm font-medium py-1.5 px-3 rounded-md transition flex items-center"
-            disabled={isPending}
+    <Card className="overflow-hidden border-2 border-border bg-card shadow-lg">
+      <CardHeader className="bg-gradient-to-r from-secondary/10 to-primary/10 pb-4">
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-2xl font-bold">Your Startup Idea</CardTitle>
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            {isPending ? (
-              <>
-                <div className="mr-1.5 animate-spin rounded-full h-3 w-3 border-2 border-white border-t-transparent"></div>
-                Saving...
-              </>
-            ) : (
-              <>
-                <i className="fas fa-save mr-1.5"></i>
-                Save Idea
-              </>
-            )}
-          </Button>
+            <Button
+              onClick={() => saveIdea()}
+              className="bg-gradient-to-r from-secondary to-secondary/90 hover:opacity-90 text-white font-medium rounded-xl flex items-center"
+              disabled={isPending}
+            >
+              {isPending ? (
+                <>
+                  <div className="mr-2 animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <i className="fas fa-save mr-2"></i>
+                  Save Idea
+                </>
+              )}
+            </Button>
+          </motion.div>
         </div>
+        <Badge className="mt-2 self-start bg-primary/20 text-primary hover:bg-primary/30">{idea.topic}</Badge>
+      </CardHeader>
+      
+      <CardContent className="p-6">
+        <div className="space-y-6">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <h3 className="mb-2 text-base font-medium text-muted-foreground">Startup Name</h3>
+            <p className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">{idea.name}</p>
+          </motion.div>
 
-        <div className="space-y-4">
-          <div>
-            <h3 className="text-base font-semibold text-gray-700">Startup Name</h3>
-            <p className="text-lg font-medium text-primary mt-1">{idea.name}</p>
-          </div>
-
-          <div>
-            <h3 className="text-base font-semibold text-gray-700">Description</h3>
-            <p className="mt-1 text-gray-600">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+          >
+            <h3 className="mb-2 text-base font-medium text-muted-foreground">Description</h3>
+            <p className="text-foreground leading-relaxed">
               {idea.description}
             </p>
-          </div>
+          </motion.div>
 
-          <div>
-            <h3 className="text-base font-semibold text-gray-700">Key Features</h3>
-            <ul className="mt-1 space-y-1 list-disc list-inside text-gray-600">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.2 }}
+          >
+            <h3 className="mb-3 text-base font-medium text-muted-foreground">Key Features</h3>
+            <motion.ul 
+              className="space-y-3"
+              variants={container}
+              initial="hidden"
+              animate="show"
+            >
               {idea.features.map((feature, index) => (
-                <li key={index}>{feature}</li>
+                <motion.li key={index} variants={item} className="flex items-start">
+                  <span className="mr-2 mt-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary/20 text-primary">
+                    <i className="fas fa-check text-xs"></i>
+                  </span>
+                  <span>{feature}</span>
+                </motion.li>
               ))}
-            </ul>
-          </div>
+            </motion.ul>
+          </motion.div>
         </div>
       </CardContent>
     </Card>

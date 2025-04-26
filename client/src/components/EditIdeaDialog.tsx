@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -78,78 +79,139 @@ export default function EditIdeaDialog({ idea, isOpen, onClose, onSave }: EditId
     updateIdea();
   };
 
+  const inputVariants = {
+    initial: { opacity: 0, y: 10 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -10 }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>Edit Startup Idea</DialogTitle>
+      <DialogContent className="sm:max-w-md overflow-hidden bg-card border-2 border-border">
+        <DialogHeader className="bg-gradient-to-r from-primary/5 to-secondary/5 pb-4 -mx-6 px-6 -mt-6 pt-6">
+          <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            Edit Startup Idea
+          </DialogTitle>
+          <DialogDescription>
+            Make changes to your startup idea below.
+          </DialogDescription>
         </DialogHeader>
         
         <form onSubmit={handleSubmit}>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="topic">Topic</Label>
+          <div className="grid gap-5 py-4">
+            <motion.div 
+              className="grid gap-2"
+              variants={inputVariants}
+              initial="initial"
+              animate="animate"
+              transition={{ duration: 0.2 }}
+            >
+              <Label htmlFor="topic" className="text-muted-foreground">Topic</Label>
               <Input
                 id="topic"
                 name="topic"
                 value={formData.topic}
                 onChange={handleInputChange}
+                className="h-10 rounded-md border-border focus:border-primary focus:ring-2 focus:ring-primary/20"
                 required
               />
-            </div>
+            </motion.div>
             
-            <div className="grid gap-2">
-              <Label htmlFor="name">Startup Name</Label>
+            <motion.div 
+              className="grid gap-2"
+              variants={inputVariants}
+              initial="initial"
+              animate="animate"
+              transition={{ duration: 0.2, delay: 0.1 }}
+            >
+              <Label htmlFor="name" className="text-muted-foreground">Startup Name</Label>
               <Input
                 id="name"
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
+                className="h-10 rounded-md border-border focus:border-primary focus:ring-2 focus:ring-primary/20"
                 required
               />
-            </div>
+            </motion.div>
             
-            <div className="grid gap-2">
-              <Label htmlFor="description">Description</Label>
+            <motion.div 
+              className="grid gap-2"
+              variants={inputVariants}
+              initial="initial"
+              animate="animate"
+              transition={{ duration: 0.2, delay: 0.2 }}
+            >
+              <Label htmlFor="description" className="text-muted-foreground">Description</Label>
               <Textarea
                 id="description"
                 name="description"
                 value={formData.description}
                 onChange={handleInputChange}
-                rows={3}
+                className="rounded-md border-border focus:border-primary focus:ring-2 focus:ring-primary/20 min-h-[80px]"
                 required
               />
-            </div>
+            </motion.div>
             
-            <div className="grid gap-2">
-              <Label>Key Features</Label>
+            <motion.div 
+              className="grid gap-3"
+              variants={inputVariants}
+              initial="initial"
+              animate="animate"
+              transition={{ duration: 0.2, delay: 0.3 }}
+            >
+              <Label className="text-muted-foreground">Key Features</Label>
               {formData.features.map((feature, index) => (
-                <div key={index} className="flex items-center gap-2">
+                <motion.div 
+                  key={index} 
+                  className="flex items-center gap-2"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3 + (index * 0.1) }}
+                >
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary text-xs">
+                    {index + 1}
+                  </span>
                   <Input
                     value={feature}
                     onChange={(e) => handleFeatureChange(index, e.target.value)}
                     placeholder={`Feature ${index + 1}`}
+                    className="h-10 rounded-md border-border focus:border-primary focus:ring-2 focus:ring-primary/20"
                     required
                   />
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
           
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose}>
+          <DialogFooter className="mt-2">
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={onClose}
+              className="border-border hover:bg-muted"
+            >
               Cancel
             </Button>
-            <Button type="submit" disabled={isPending}>
-              {isPending ? (
-                <>
-                  <div className="mr-2 animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
-                  Saving...
-                </>
-              ) : (
-                'Save Changes'
-              )}
-            </Button>
+            <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
+              <Button 
+                type="submit" 
+                disabled={isPending}
+                className="bg-gradient-to-r from-primary to-secondary text-white"
+              >
+                {isPending ? (
+                  <>
+                    <div className="mr-2 animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <i className="fas fa-save mr-2"></i>
+                    Save Changes
+                  </>
+                )}
+              </Button>
+            </motion.div>
           </DialogFooter>
         </form>
       </DialogContent>

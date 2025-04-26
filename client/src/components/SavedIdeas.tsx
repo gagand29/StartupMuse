@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { motion, AnimatePresence } from "framer-motion";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Idea } from "@shared/schema";
 import EditIdeaDialog from "@/components/EditIdeaDialog";
 
@@ -49,60 +51,147 @@ export default function SavedIdeas({ ideas, isLoading }: SavedIdeasProps) {
     }
   };
 
-  return (
-    <Card className="bg-white rounded-lg shadow">
-      <CardContent className="p-6">
-        <h2 className="text-xl font-semibold mb-4">Saved Ideas</h2>
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
 
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 12
+      }
+    },
+    exit: {
+      opacity: 0,
+      y: -20,
+      transition: {
+        duration: 0.2
+      }
+    }
+  };
+
+  return (
+    <Card className="overflow-hidden border-2 border-border bg-card shadow-lg">
+      <CardHeader className="bg-gradient-to-r from-primary/10 to-secondary/10 pb-4">
+        <CardTitle className="text-2xl font-bold flex items-center">
+          <motion.div
+            className="mr-3 text-secondary"
+            initial={{ rotate: -45, scale: 0.8 }}
+            animate={{ rotate: 0, scale: 1 }}
+            transition={{
+              type: "spring",
+              stiffness: 260,
+              damping: 20
+            }}
+          >
+            <i className="fas fa-bookmark text-xl"></i>
+          </motion.div>
+          Saved Ideas
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="p-6">
         {isLoading ? (
-          <div className="text-center py-4">
-            <div className="inline-block animate-spin rounded-full h-6 w-6 border-4 border-gray-300 border-t-primary"></div>
-            <p className="mt-2 text-gray-500 text-sm">Loading saved ideas...</p>
+          <div className="py-12 flex flex-col items-center justify-center">
+            <motion.div 
+              className="flex items-center justify-center h-12 w-12 rounded-full bg-primary/10"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+            >
+              <i className="fas fa-spinner text-primary"></i>
+            </motion.div>
+            <p className="mt-4 text-muted-foreground">Loading saved ideas...</p>
           </div>
         ) : ideas.length === 0 ? (
-          <div className="bg-gray-50 rounded-md p-4 text-center text-gray-500">
-            <i className="fas fa-folder-open text-gray-400 text-2xl mb-2"></i>
-            <p>No saved ideas yet. Generate and save some ideas to see them here.</p>
-          </div>
+          <motion.div 
+            className="rounded-lg bg-muted/50 p-8 text-center flex flex-col items-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <div className="mb-4 h-16 w-16 rounded-full bg-muted flex items-center justify-center text-muted-foreground">
+              <i className="fas fa-folder-open text-2xl"></i>
+            </div>
+            <h3 className="text-lg font-medium mb-2">No saved ideas yet</h3>
+            <p className="text-muted-foreground">Generate and save some ideas to see them here.</p>
+          </motion.div>
         ) : (
-          <div className="space-y-4 mt-2">
-            {ideas.map((idea) => (
-              <div key={idea.id} className="border border-gray-200 rounded-md p-4 hover:bg-gray-50 transition">
-                <div className="flex justify-between items-start">
-                  <h3 className="font-semibold text-lg text-primary">{idea.name}</h3>
-                  <span className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full">{idea.topic}</span>
-                </div>
-                <p className="text-gray-600 text-sm mt-1">{idea.description}</p>
-                <div className="mt-2">
-                  <p className="text-xs font-medium text-gray-500">Key Features:</p>
-                  <ul className="mt-1 text-xs text-gray-600 list-disc list-inside">
-                    {idea.features.map((feature, index) => (
-                      <li key={index}>{feature}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="mt-3 flex space-x-2 justify-end">
-                  <Button
-                    onClick={() => handleEdit(idea)} 
-                    variant="outline"
-                    size="sm"
-                    className="text-xs"
-                  >
-                    <i className="fas fa-edit mr-1"></i> Edit
-                  </Button>
-                  <Button 
-                    onClick={() => handleDelete(idea.id)}
-                    variant="outline"
-                    size="sm"
-                    className="text-xs bg-red-50 text-red-600 border-red-200 hover:bg-red-100 hover:text-red-700"
-                    disabled={isDeleting}
-                  >
-                    <i className="fas fa-trash-alt mr-1"></i> Delete
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
+          <motion.div 
+            className="space-y-4 mt-2"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            <AnimatePresence>
+              {ideas.map((idea) => (
+                <motion.div 
+                  key={idea.id} 
+                  className="border-2 border-border rounded-lg p-5 hover:shadow-md transition-shadow bg-card overflow-hidden"
+                  variants={itemVariants}
+                  layout
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  whileHover={{ scale: 1.01 }}
+                >
+                  <div className="flex flex-col space-y-3">
+                    <div className="flex justify-between items-start flex-wrap gap-2">
+                      <h3 className="font-bold text-lg bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">{idea.name}</h3>
+                      <Badge variant="outline" className="bg-secondary/10 text-secondary hover:bg-secondary/20 border-secondary/20">{idea.topic}</Badge>
+                    </div>
+                    <p className="text-foreground text-sm">{idea.description}</p>
+                    <div className="mt-1">
+                      <p className="text-xs font-medium text-muted-foreground mb-2">Key Features:</p>
+                      <ul className="grid gap-1">
+                        {idea.features.map((feature, index) => (
+                          <li key={index} className="text-sm text-foreground flex items-center">
+                            <span className="mr-2 text-xs text-primary">
+                              <i className="fas fa-check-circle"></i>
+                            </span>
+                            {feature}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="mt-2 flex space-x-3 justify-end">
+                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                        <Button
+                          onClick={() => handleEdit(idea)} 
+                          variant="outline"
+                          size="sm"
+                          className="text-xs border-primary/20 bg-primary/10 text-primary hover:bg-primary/20"
+                        >
+                          <i className="fas fa-edit mr-1.5"></i> Edit
+                        </Button>
+                      </motion.div>
+                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                        <Button 
+                          onClick={() => handleDelete(idea.id)}
+                          variant="outline"
+                          size="sm"
+                          className="text-xs bg-destructive/10 text-destructive border-destructive/20 hover:bg-destructive/20"
+                          disabled={isDeleting}
+                        >
+                          <i className="fas fa-trash-alt mr-1.5"></i> Delete
+                        </Button>
+                      </motion.div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
         )}
       </CardContent>
       
