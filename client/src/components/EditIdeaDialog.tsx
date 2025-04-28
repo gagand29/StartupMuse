@@ -27,7 +27,7 @@ export default function EditIdeaDialog({ idea, isOpen, onClose, onSave }: EditId
     latitude: idea.latitude || null,
     longitude: idea.longitude || null,
   });
-  
+
   const { toast } = useToast();
 
   const { mutate: updateIdea, isPending } = useMutation({
@@ -69,7 +69,7 @@ export default function EditIdeaDialog({ idea, isOpen, onClose, onSave }: EditId
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.name.trim() || !formData.description.trim() || formData.features.some(f => !f.trim())) {
       toast({
         title: "Error",
@@ -78,7 +78,7 @@ export default function EditIdeaDialog({ idea, isOpen, onClose, onSave }: EditId
       });
       return;
     }
-    
+
     updateIdea();
   };
 
@@ -90,7 +90,7 @@ export default function EditIdeaDialog({ idea, isOpen, onClose, onSave }: EditId
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md bg-card/95 border-2 border-border shadow-xl backdrop-blur-md max-h-[90vh] flex flex-col z-[150]">
+      <DialogContent className="sm:max-w-md bg-card/95 border-2 border-border shadow-xl backdrop-blur-sm max-h-[90vh] flex flex-col overflow-y-auto">
         <DialogHeader className="bg-gradient-to-r from-primary/5 to-secondary/5 pb-4 -mx-6 px-6 -mt-6 pt-6 flex-shrink-0">
           <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
             Edit Startup Idea
@@ -99,7 +99,7 @@ export default function EditIdeaDialog({ idea, isOpen, onClose, onSave }: EditId
             Make changes to your startup idea below.
           </DialogDescription>
         </DialogHeader>
-        
+
         <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
           <div className="grid gap-5 py-4 overflow-y-auto px-1">
             <motion.div 
@@ -119,7 +119,7 @@ export default function EditIdeaDialog({ idea, isOpen, onClose, onSave }: EditId
                 required
               />
             </motion.div>
-            
+
             <motion.div 
               className="grid gap-2"
               variants={inputVariants}
@@ -137,7 +137,7 @@ export default function EditIdeaDialog({ idea, isOpen, onClose, onSave }: EditId
                 required
               />
             </motion.div>
-            
+
             <motion.div 
               className="grid gap-2"
               variants={inputVariants}
@@ -155,7 +155,7 @@ export default function EditIdeaDialog({ idea, isOpen, onClose, onSave }: EditId
                 required
               />
             </motion.div>
-            
+
             <motion.div 
               className="grid gap-3"
               variants={inputVariants}
@@ -185,7 +185,7 @@ export default function EditIdeaDialog({ idea, isOpen, onClose, onSave }: EditId
                 </motion.div>
               ))}
             </motion.div>
-            
+
             {/* Location information */}
             <motion.div 
               className="grid gap-3 mt-2 border-t border-border pt-4"
@@ -198,7 +198,7 @@ export default function EditIdeaDialog({ idea, isOpen, onClose, onSave }: EditId
                 <i className="fas fa-map-marker-alt text-secondary"></i>
                 <Label className="text-muted-foreground font-medium">Headquarters Location</Label>
               </div>
-              
+
               <div className="grid gap-3">
                 <motion.div 
                   initial={{ opacity: 0, y: 10 }}
@@ -215,7 +215,7 @@ export default function EditIdeaDialog({ idea, isOpen, onClose, onSave }: EditId
                     className="h-10 rounded-md border-border focus:border-primary focus:ring-2 focus:ring-primary/20"
                   />
                 </motion.div>
-                
+
                 <div className="grid grid-cols-2 gap-3">
                   <motion.div 
                     initial={{ opacity: 0, y: 10 }}
@@ -232,7 +232,7 @@ export default function EditIdeaDialog({ idea, isOpen, onClose, onSave }: EditId
                       className="h-10 rounded-md border-border focus:border-primary focus:ring-2 focus:ring-primary/20"
                     />
                   </motion.div>
-                  
+
                   <motion.div 
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -252,7 +252,7 @@ export default function EditIdeaDialog({ idea, isOpen, onClose, onSave }: EditId
               </div>
             </motion.div>
           </div>
-          
+
           <DialogFooter className="mt-4 gap-3 flex-shrink-0 border-t border-border/50 pt-4">
             <motion.div 
               whileHover={{ scale: 1.02 }} 
