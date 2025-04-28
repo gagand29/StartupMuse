@@ -139,19 +139,27 @@ export default function IdeaResult({ idea, onSave }: IdeaResultProps) {
               transition={{ duration: 0.3, delay: 0.3 }}
               className="pt-2"
             >
-              <div className="flex justify-between items-center mb-2">
-                <h3 className="text-base font-medium text-muted-foreground flex items-center">
-                  <i className="fas fa-map-marker-alt mr-2 text-secondary"></i>
-                  Global Headquarters
-                </h3>
-                {idea.city && (
-                  <Badge 
-                    variant="outline" 
-                    className="bg-primary/10 text-primary hover:bg-primary/20 border-primary/20 flex items-center gap-1"
-                  >
-                    <i className="fas fa-globe-americas text-xs"></i>
-                    {idea.city}
-                  </Badge>
+              <div className="space-y-3 mb-4">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-base font-medium text-muted-foreground flex items-center">
+                    <i className="fas fa-map-marker-alt mr-2 text-secondary"></i>
+                    Global Headquarters
+                  </h3>
+                  {idea.city && (
+                    <Badge 
+                      variant="outline" 
+                      className="bg-primary/10 text-primary hover:bg-primary/20 border-primary/20 flex items-center gap-1"
+                    >
+                      <i className="fas fa-globe-americas text-xs"></i>
+                      {idea.city}
+                    </Badge>
+                  )}
+                </div>
+                
+                {idea.locationRationale && (
+                  <div className="text-sm text-muted-foreground italic border-l-2 border-primary/20 pl-3">
+                    "{idea.locationRationale}"
+                  </div>
                 )}
               </div>
               
@@ -175,16 +183,9 @@ export default function IdeaResult({ idea, onSave }: IdeaResultProps) {
                 
                 {(idea.latitude && idea.longitude) && (
                   <div className="bg-muted/30 text-xs text-muted-foreground p-2 flex justify-between">
-                    <div className="flex flex-col gap-1">
-                      <span>
-                        <i className="fas fa-map-pin mr-1"></i> {idea.city || 'Headquarters Location'}
-                      </span>
-                      {idea.locationRationale && (
-                        <span className="text-xs italic text-muted-foreground">
-                          "{idea.locationRationale}"
-                        </span>
-                      )}
-                    </div>
+                    <span>
+                      <i className="fas fa-map-pin mr-1"></i> {idea.city || 'Headquarters Location'}
+                    </span>
                     <span className="font-mono text-xs">
                       {parseFloat(idea.latitude).toFixed(4)}, {parseFloat(idea.longitude).toFixed(4)}
                     </span>
