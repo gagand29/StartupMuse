@@ -131,14 +131,42 @@ export default function IdeaResult({ idea, onSave }: IdeaResultProps) {
             </motion.ul>
           </motion.div>
 
-          {/* Headquarters Location */}
+          {/* Location Preview */}
           {(idea.city || idea.latitude || idea.longitude) && (
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.3 }}
-              className="pt-2"
-            >
+            <>
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.25 }}
+                className="mt-6 flex items-center justify-between"
+              >
+                <div className="flex items-center gap-2">
+                  <i className="fas fa-map-marker-alt text-secondary"></i>
+                  <span className="font-medium">Global Headquarters</span>
+                </div>
+                <Badge variant="outline" className="bg-primary/10 text-primary hover:bg-primary/20 border-primary/20">
+                  {idea.city}
+                </Badge>
+              </motion.div>
+              
+              {idea.locationRationale && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.3 }}
+                  className="mt-2 text-sm text-muted-foreground italic border-l-2 border-primary/20 pl-3"
+                >
+                  "{idea.locationRationale}"
+                </motion.div>
+              )}
+
+              {/* Map Section */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.35 }}
+                className="mt-4"
+              >
               <div className="space-y-3 mb-4">
                 <div className="flex justify-between items-center">
                   <h3 className="text-base font-medium text-muted-foreground flex items-center">
