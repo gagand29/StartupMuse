@@ -46,7 +46,7 @@ export class LocationService {
       // Return location-specific prompt instructions
       return `
         - The startup headquarters MUST be located in or near ${this.capitalizeFirstLetter(foundPlace)}
-        - Choose a specific city within this region that would be appropriate for this business
+        - Choose a specific city within this region that would be appropriate for this business 
         - If the location is a city, use that exact city
         - If the location is a country or region, choose a notable but perhaps not obvious city within it
       `;
