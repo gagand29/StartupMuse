@@ -44,14 +44,16 @@ const getCustomIcon = (color = '#7c3aed') => {
 // Component to handle auto-panning to marker
 function AutoPanToMarker({ position }: { position: [number, number] }) {
   const map = useMap();
-  
+
   useEffect(() => {
     map.setView(position, map.getZoom(), {
       animate: true,
-      duration: 1
+      duration: 0.8,
+      easeLinearity: 0.25
     });
+    map.invalidateSize();
   }, [map, position[0], position[1]]);
-  
+
   return null;
 }
 
@@ -72,20 +74,20 @@ export default function IdeaMap({ idea }: IdeaMapProps) {
   // Convert latitude and longitude to numbers with fallbacks
   const lat = parseFloat(idea.latitude || '0') || 37.7749; // Default to San Francisco
   const lng = parseFloat(idea.longitude || '0') || -122.4194;
-  
+
   // Check if coordinates are valid
   const validCoords = !isNaN(lat) && !isNaN(lng) && 
     lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180;
-  
+
   // Fallback to default if invalid
   const position: [number, number] = validCoords 
     ? [lat, lng] 
     : [37.7749, -122.4194]; // Default to San Francisco
-  
+
   // Get a custom marker icon for this startup
   // Color changes based on theme
   const customIcon = getCustomIcon('hsl(var(--primary))'); // Using primary theme color
-  
+
   return (
     <div style={{ height: '300px' }}>
       <MapContainer 
@@ -98,9 +100,9 @@ export default function IdeaMap({ idea }: IdeaMapProps) {
           key="tiles"
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        
+
         <AutoPanToMarker position={position} />
-        
+
         <Marker position={position} icon={customIcon}>
           <Popup>
             <div className="text-sm py-1">

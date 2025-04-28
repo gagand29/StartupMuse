@@ -90,7 +90,7 @@ export default function EditIdeaDialog({ idea, isOpen, onClose, onSave }: EditId
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md bg-card/95 border-2 border-border shadow-xl backdrop-blur-sm max-h-[90vh] flex flex-col">
+      <DialogContent className="sm:max-w-md bg-card/95 border-2 border-border shadow-xl backdrop-blur-md max-h-[90vh] flex flex-col z-[150]">
         <DialogHeader className="bg-gradient-to-r from-primary/5 to-secondary/5 pb-4 -mx-6 px-6 -mt-6 pt-6 flex-shrink-0">
           <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
             Edit Startup Idea
