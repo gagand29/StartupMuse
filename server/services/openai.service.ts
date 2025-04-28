@@ -47,7 +47,8 @@ export class OpenAIService {
           "features": ["Feature 1", "Feature 2", "Feature 3"],
           "city": "A unique or unexpected real city for this startup's headquarters",
           "latitude": "Latitude of the city (e.g., 40.7128)",
-          "longitude": "Longitude of the city (e.g., -74.0060)"
+          "longitude": "Longitude of the city (e.g., -74.0060)",
+          "locationRationale": "A one-line reason why this location is perfect for the startup"
         }
         
         Be creative but concise. The name should be memorable and relate to the topic.

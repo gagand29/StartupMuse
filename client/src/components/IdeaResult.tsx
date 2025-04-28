@@ -175,10 +175,17 @@ export default function IdeaResult({ idea, onSave }: IdeaResultProps) {
                 
                 {(idea.latitude && idea.longitude) && (
                   <div className="bg-muted/30 text-xs text-muted-foreground p-2 flex justify-between">
-                    <span>
-                      <i className="fas fa-map-pin mr-1"></i> {idea.city || 'Headquarters Location'}
-                    </span>
-                    <span className="font-mono">
+                    <div className="flex flex-col gap-1">
+                      <span>
+                        <i className="fas fa-map-pin mr-1"></i> {idea.city || 'Headquarters Location'}
+                      </span>
+                      {idea.locationRationale && (
+                        <span className="text-xs italic text-muted-foreground">
+                          "{idea.locationRationale}"
+                        </span>
+                      )}
+                    </div>
+                    <span className="font-mono text-xs">
                       {parseFloat(idea.latitude).toFixed(4)}, {parseFloat(idea.longitude).toFixed(4)}
                     </span>
                   </div>

@@ -11,6 +11,7 @@ export const ideas = pgTable("ideas", {
   city: text("city"),
   latitude: text("latitude"),
   longitude: text("longitude"),
+  locationRationale: text("locationRationale"), // Added locationRationale field
 });
 
 export const insertIdeaSchema = createInsertSchema(ideas).omit({
