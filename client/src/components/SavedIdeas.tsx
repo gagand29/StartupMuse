@@ -4,6 +4,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Idea } from "@shared/schema";
@@ -45,9 +55,16 @@ export default function SavedIdeas({ ideas, isLoading }: SavedIdeasProps) {
     setIsEditDialogOpen(true);
   };
 
+  const [deleteId, setDeleteId] = useState<number | null>(null);
+  
   const handleDelete = (id: number) => {
-    if (window.confirm("Are you sure you want to delete this idea?")) {
-      deleteIdea(id);
+    setDeleteId(id);
+  };
+
+  const confirmDelete = () => {
+    if (deleteId) {
+      deleteIdea(deleteId);
+      setDeleteId(null);
     }
   };
 
@@ -83,6 +100,26 @@ export default function SavedIdeas({ ideas, isLoading }: SavedIdeasProps) {
   };
 
   return (
+    <>
+    <AlertDialog open={deleteId !== null} onOpenChange={() => setDeleteId(null)}>
+      <AlertDialogContent className="bg-card/95 border-2 border-border shadow-xl backdrop-blur-sm">
+        <AlertDialogHeader>
+          <AlertDialogTitle className="text-xl font-bold">Delete Idea</AlertDialogTitle>
+          <AlertDialogDescription className="text-muted-foreground">
+            Are you sure you want to delete this idea? This action cannot be undone.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter className="mt-4">
+          <AlertDialogCancel className="border-2 border-border hover:bg-muted/50">Cancel</AlertDialogCancel>
+          <AlertDialogAction 
+            onClick={confirmDelete}
+            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+          >
+            Delete
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
     <Card className="overflow-hidden border-2 border-border bg-card shadow-lg">
       <CardHeader className="bg-gradient-to-r from-primary/10 to-secondary/10 pb-4">
         <CardTitle className="text-2xl font-bold flex items-center">
