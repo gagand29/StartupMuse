@@ -1,0 +1,36 @@
+
+name: Deploy to Replit
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          
+      - name: Install Dependencies
+        run: npm install
+        
+      - name: Build
+        run: npm run build
+        
+      - name: Deploy to Replit
+        env:
+          REPLIT_TOKEN: ${{ secrets.REPLIT_TOKEN }}
+        run: |
+          curl -X POST "https://api.replit.com/v1/deployments/new" \
+          -H "Authorization: Bearer $REPLIT_TOKEN" \
+          -H "Content-Type: application/json" \
+          --data '{"repl": "${{ github.repository }}"}'
