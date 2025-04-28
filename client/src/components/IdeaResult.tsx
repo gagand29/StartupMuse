@@ -83,11 +83,7 @@ export default function IdeaResult({ idea, onSave }: IdeaResultProps) {
               animate={{ opacity: 1, scale: 1 }}
               className="h-[200px] rounded-md overflow-hidden"
             >
-              <IdeaMap 
-                latitude={parseFloat(idea.latitude)} 
-                longitude={parseFloat(idea.longitude)}
-                city={idea.city || ""}
-              />
+              <IdeaMap idea={idea} />
             </motion.div>
           )}
 
