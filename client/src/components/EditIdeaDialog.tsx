@@ -90,7 +90,7 @@ export default function EditIdeaDialog({ idea, isOpen, onClose, onSave }: EditId
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md overflow-hidden bg-card border-2 border-border">
+      <DialogContent className="sm:max-w-md overflow-hidden bg-card/95 border-2 border-border shadow-xl backdrop-blur-sm">
         <DialogHeader className="bg-gradient-to-r from-primary/5 to-secondary/5 pb-4 -mx-6 px-6 -mt-6 pt-6">
           <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
             Edit Startup Idea
@@ -253,20 +253,31 @@ export default function EditIdeaDialog({ idea, isOpen, onClose, onSave }: EditId
             </motion.div>
           </div>
           
-          <DialogFooter className="mt-2">
-            <Button 
-              type="button" 
-              variant="outline" 
-              onClick={onClose}
-              className="border-border hover:bg-muted"
+          <DialogFooter className="mt-4 gap-3">
+            <motion.div 
+              whileHover={{ scale: 1.02 }} 
+              whileTap={{ scale: 0.98 }}
+              className="w-full sm:w-auto"
             >
-              Cancel
-            </Button>
-            <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={onClose}
+                className="w-full sm:w-auto border-2 border-border hover:bg-muted/50 hover:border-border/80 transition-all"
+              >
+                <i className="fas fa-times mr-2"></i>
+                Cancel
+              </Button>
+            </motion.div>
+            <motion.div 
+              whileHover={{ scale: 1.02 }} 
+              whileTap={{ scale: 0.98 }}
+              className="w-full sm:w-auto"
+            >
               <Button 
                 type="submit" 
                 disabled={isPending}
-                className="bg-gradient-to-r from-primary to-secondary text-white"
+                className="w-full sm:w-auto bg-gradient-to-r from-primary to-secondary text-white shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all"
               >
                 {isPending ? (
                   <>
